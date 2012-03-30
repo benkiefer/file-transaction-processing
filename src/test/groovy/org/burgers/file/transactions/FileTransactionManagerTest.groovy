@@ -13,10 +13,11 @@ class FileTransactionManagerTest extends GroovyTestCase{
     }
 
     void tearDown() {
+        assert !new File(file.parentFile.absolutePath + "/working").exists()
         file.delete()
     }
 
-    void happyPath() {
+    void test_happyPath() {
         manager.doInTransaction(file) {OutputStream stream ->
             1000.times {
                 stream.write('hi\n'.bytes)

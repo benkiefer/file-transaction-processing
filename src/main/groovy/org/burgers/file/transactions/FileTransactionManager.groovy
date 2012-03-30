@@ -10,7 +10,8 @@ class FileTransactionManager {
 
     void doInTransaction(File file, Closure closure) {
         def storeDirectory = file.parentFile.absolutePath
-        FileResourceManager frm = new FileResourceManager(storeDirectory, storeDirectory + "/working", false, logger)
+        def workingDirectoryPath = storeDirectory + "/working"
+        FileResourceManager frm = new FileResourceManager(storeDirectory, workingDirectoryPath, false, logger)
 
         String transactionId
         OutputStream stream
@@ -25,6 +26,7 @@ class FileTransactionManager {
         } catch (e) {
             frm.rollbackTransaction transactionId
         } finally {
+            new File(workingDirectoryPath).deleteDir()
             stream.flush()
             stream.close()
         }
